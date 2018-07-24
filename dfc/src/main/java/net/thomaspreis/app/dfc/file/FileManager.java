@@ -69,7 +69,6 @@ public class FileManager extends ManagerBase {
 			return fileName.replaceAll(String.valueOf(File.separatorChar) + String.valueOf(File.separatorChar),
 					String.valueOf(File.separatorChar));
 		} catch (Exception e) {
-			super.error("Error skpping file separator: " + fileName, e);
 		}
 		return fileName;
 	}

@@ -38,7 +38,7 @@ public class App extends Application {
 
 	private static final Logger LOGGER = Logger.getLogger(App.class);
 
-	private static final String APP_VERSION = "0.0.2-SNAPSHOT";
+	private static final String APP_VERSION = "0.0.4-SNAPSHOT";
 
 	private AppConfigManager appConfigManager;
 	private MainGridModel mainGridModel;

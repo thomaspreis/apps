@@ -39,11 +39,20 @@ public class CopyProcessorManager extends ManagerBase {
 			final List<ExcelEntryModel> entriesList = this.excelManager.readContent();
 			super.debug("Starting to copy and rename files");
 			for (ExcelEntryModel eem : entriesList) {
-				this.fileManager.copyFile(eem.getSourceName(), eem.getTargetName(), this.fileExtension);
+				String sourceFileName = cleanFileName(eem.getSourceName());
+				super.debug(
+						String.format("Searching file to copy %s instead of %s", sourceFileName, eem.getSourceName()));
+				this.fileManager.copyFile(sourceFileName, eem.getTargetName(), this.fileExtension);
 			}
 			super.debug("Finished - copy and rename files");
 		}
 		return Boolean.TRUE;
+	}
+
+	private String cleanFileName(String fileName) {
+		String target = fileName.replaceAll("\"", "''");
+		target = target.replaceAll("/", "_");
+		return target;
 	}
 
 }
