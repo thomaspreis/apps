@@ -12,10 +12,10 @@ public class FileManagerTest extends TestCase {
 	private static final String SOURCE_FILE_NAME = "INPASA-LI-CAL-401-001=01.xlsx";
 	private static final String TARGET_FILE_NAME = "RENAMED-INPASA-LI-CAL-401-001-01.xlsx";
 
-	public void testCopyFile() {
+	public void testMoveFile() {
 		new File(TARGET_PATH + TARGET_FILE_NAME).delete();
 		FileManager fileManager = new FileManager(SOURCE_PATH, TARGET_PATH);
-		fileManager.copyFile(SOURCE_FILE_NAME, TARGET_FILE_NAME, ".xlsx");
+		fileManager.moveFile(SOURCE_FILE_NAME, TARGET_FILE_NAME, ".xlsx");
 		assertTrue(Boolean.TRUE);
 	}
 

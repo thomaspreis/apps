@@ -3,7 +3,7 @@ package net.thomaspreis.app.dfc.domain;
 public enum AppResourcesEnum {
 	PROCESS_BUTTON("Toca Ficha!"),
 	EXCEL_FOLDER_LABEL("Diretório Arquivos Excel"),
-	FILE_TYPE_LABEL("Tipos de arquivo para cópia"),
+	FILE_TYPE_LABEL("Tipo de arquivo"),
 	SOURCE_FOLDER_LABEL("Diretório origem"),
 	TARGET_FOLDER_LABEL("Diretório destino");
 	private String value;

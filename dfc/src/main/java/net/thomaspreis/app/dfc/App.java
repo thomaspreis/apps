@@ -28,7 +28,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import net.thomaspreis.app.dfc.base.ConsoleTextAreaSingleton;
-import net.thomaspreis.app.dfc.base.CopyProcessorManager;
+import net.thomaspreis.app.dfc.base.MoveFileProcessorManager;
 import net.thomaspreis.app.dfc.config.AppConfigManager;
 import net.thomaspreis.app.dfc.domain.AppResourcesEnum;
 import net.thomaspreis.app.dfc.model.ExcelSheetConfigModel;
@@ -38,7 +38,8 @@ public class App extends Application {
 
 	private static final Logger LOGGER = Logger.getLogger(App.class);
 
-	private static final String APP_VERSION = "0.0.4-SNAPSHOT";
+	private static final String APP_VERSION = "1.0.1";
+	private static final String APP_TITLE = "Aplus File Copier - v" + APP_VERSION;
 
 	private AppConfigManager appConfigManager;
 	private MainGridModel mainGridModel;
@@ -54,7 +55,7 @@ public class App extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		setupApp();
 
-		primaryStage.setTitle("Djou File Copier - v" + APP_VERSION);
+		primaryStage.setTitle(APP_TITLE);
 		// Create the registration form grid pane
 		GridPane gridPane = createRegistrationFormPane();
 		// Add UI controls to the registration form grid pane
@@ -104,7 +105,7 @@ public class App extends Application {
 	private void addUIControls(final GridPane gridPane) {
 		int rowNum = 1;
 		// Add Header
-		final Label headerLabel = new Label("Djou File Copier - v" + APP_VERSION);
+		final Label headerLabel = new Label(APP_TITLE);
 		headerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 		gridPane.add(headerLabel, 0, 0, 2, 1);
 		GridPane.setHalignment(headerLabel, HPos.CENTER);
@@ -186,7 +187,7 @@ public class App extends Application {
 
 				consoleTextArea.setText("");
 
-				CopyProcessorManagerProducer producer = new CopyProcessorManagerProducer(messageQueue);
+				MoveFileProcessorManagerProducer producer = new MoveFileProcessorManagerProducer(messageQueue, submitButton);
 				producer.excelCfg = appConfigManager.getExcelSheetConfigModel();
 				producer.sourceExcelFolder = sourceExcelFolderField.getText();
 				producer.fileExtension = sourceFileExtensionField.getText();
@@ -239,26 +240,31 @@ public class App extends Application {
 		alert.show();
 	}
 
-	private static class CopyProcessorManagerProducer implements Runnable {
+	private static class MoveFileProcessorManagerProducer implements Runnable {
 		String sourceExcelFolder;
 		String fileExtension;
 		String sourceFolder;
 		String targetFolder;
 		ExcelSheetConfigModel excelCfg;
+		Button submitButton;
 
-		public CopyProcessorManagerProducer(BlockingQueue<String> messageQueue) {
+		public MoveFileProcessorManagerProducer(BlockingQueue<String> messageQueue, Button submitButton) {
 			ConsoleTextAreaSingleton.getInstance().setMessageQueue(messageQueue);
+			this.submitButton = submitButton;
 		}
 
 		@Override
 		public void run() {
-			CopyProcessorManager copyProcessorManager = new CopyProcessorManager(sourceExcelFolder, fileExtension,
+			MoveFileProcessorManager moveFileProcessorManager = new MoveFileProcessorManager(sourceExcelFolder, fileExtension,
 					sourceFolder, targetFolder, excelCfg);
 			try {
-				copyProcessorManager.process();
+				this.submitButton.setDisable(Boolean.TRUE);
+				moveFileProcessorManager.process();
 			} catch (Exception e) {
 				LOGGER.error(e);
 				ConsoleTextAreaSingleton.getInstance().append(e.getLocalizedMessage());
+			} finally {
+				this.submitButton.setDisable(Boolean.FALSE);
 			}
 		}
 	}
